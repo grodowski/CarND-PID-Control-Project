@@ -17,7 +17,7 @@ void PID::Init(double Kp, double Ki, double Kd) {
   TotalCte_ = 0.0;
 }
 
-double PID::Steer(double prev_angle, double cte) {
+double PID::Steer(double cte) {
   UpdateError(cte);
   double steer = -Kp_ * cte - Kd_ * (cte - PrevCte_) - Ki_ * TotalCte_;
   PrevCte_ = cte;

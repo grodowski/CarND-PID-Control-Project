@@ -1,6 +1,36 @@
 # CarND-Controls-PID
 Self-Driving Car Engineer Nanodegree Program
 
+## Reflection
+
+#### PID Controller
+
+PID Controller, standing for Proportional, Integral and Derivative is a controller that takes the current value and the cross-track error to generate steering inputs that allow the car to follow the desired path.
+
+The full formula for PID controller output is the following (code from `src/pid.cpp`):
+
+```
+steer(cte): -Kp * cte - Kd * (cte - PrevCte) - Ki * TotalCte;
+```
+
+where `Kp`, `Kd` and `Ki` are the proportional, derivative and integral part of the controller equation.
+
+The proportional part `Kp` is responsible for the sensitivity of the controllers' response, i.e. the higher it is, the quicker will be the response to error. However, a highly sensitive controller will quickly start to oscilate and eventually overshoot.
+
+The derivative part `Kd` is responsible for managing that overshooting. It means, that the higher the slope of the current trajectory of the car towards the ideal track, the less agressive next steering signal will be. `Kd` effectively prevents the controller from oscilating after a strong response.
+
+The integral part `Ki` can compensate for any constant bias the controlled object might have by adjusting the output to a sum of all cte's observed in the lifecycle of the controller (an integral).
+
+#### Tuning PID parameters
+
+My approach to tuning PID hyperparameters was as found in one of the [forum discussions](https://discussions.udacity.com/t/how-to-tune-parameters/303845/4?u=jgrodowski). I started with `Ki` and `Kd` set to 0, which makes the controller a simple P-controller and tried to tune `Kp` so that the error and oscilations remain small for the longest possible distance travelled until the car overshoots.
+
+Then I started increasing `Kd` to compensate overshooting and observed how the car became more stable in several small steps, from `0.1` up to `3.5`.
+
+Finally, I introduced a really small `Ki` which subjectively made the car drive back to the center of the lane a bit quicker. I also revisited `Kp` and increased by `0.02` at the end to make steering responses a bit snappier.
+
+Final parameters: `Kp = 0.09; Kd = 3.5, Ki = 0.001`
+
 ---
 
 ## Dependencies
@@ -19,7 +49,7 @@ Self-Driving Car Engineer Nanodegree Program
   * Run either `./install-mac.sh` or `./install-ubuntu.sh`.
   * If you install from source, checkout to commit `e94b6e1`, i.e.
     ```
-    git clone https://github.com/uWebSockets/uWebSockets 
+    git clone https://github.com/uWebSockets/uWebSockets
     cd uWebSockets
     git checkout e94b6e1
     ```
@@ -33,7 +63,7 @@ There's an experimental patch for windows in this [PR](https://github.com/udacit
 1. Clone this repo.
 2. Make a build directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
+4. Run it: `./pid`.
 
 ## Editor Settings
 

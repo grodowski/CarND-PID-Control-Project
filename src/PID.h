@@ -35,7 +35,7 @@ public:
   /*
   * Estimate steering angle
   */
-  double Steer(double prev_angle, double cte);
+  double Steer(double cte);
 
   /*
   * Calculate the total PID error.
